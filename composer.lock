@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "518f41f443b52292ee698617e0197820",
+    "content-hash": "1af4192465343b0fa5e8bbad95b86db9",
     "packages": [
         {
             "name": "brick/math",
@@ -1062,10 +1062,16 @@
         {
             "name": "job/shared",
             "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AbdoNasser23/Job-shared.git",
+                "reference": "5b2f1b0666fdf182d668657c574f146c0f2d51a0"
+            },
             "dist": {
-                "type": "path",
-                "url": "../Job_shared",
-                "reference": "5e40f7a97ec04c829749819b9fe5420f3a2fcb0a"
+                "type": "zip",
+                "url": "https://api.github.com/repos/AbdoNasser23/Job-shared/zipball/5b2f1b0666fdf182d668657c574f146c0f2d51a0",
+                "reference": "5b2f1b0666fdf182d668657c574f146c0f2d51a0",
+                "shasum": ""
             },
             "require": {
                 "laravel/framework": "^13.17",
@@ -1088,9 +1094,11 @@
                 }
             ],
             "description": "This is a library to shared logics of models",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/AbdoNasser23/Job-shared/tree/1.0.0",
+                "issues": "https://github.com/AbdoNasser23/Job-shared/issues"
+            },
+            "time": "2026-10-31T20:39:20+00:00"
         },
         {
             "name": "laravel/framework",
