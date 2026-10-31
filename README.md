@@ -1,251 +1,274 @@
-# JobBoard Backoffice
+<div align="center">
 
-<p align="center">
-  <strong>Administrative & Company Management System</strong>
+# 🏢 JobBoard Backoffice
+
+**The administration and company-management console of the JobBoard platform.**
+
+Manage companies, vacancies, categories, users and AI-scored job applications from a single, role-aware dashboard.
+
+<p>
+  <img alt="PHP" src="https://img.shields.io/badge/PHP-8.3%2B-777BB4?style=for-the-badge&logo=php&logoColor=white">
+  <img alt="Laravel" src="https://img.shields.io/badge/Laravel-13-FF2D20?style=for-the-badge&logo=laravel&logoColor=white">
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white">
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white">
+  <img alt="Pest" src="https://img.shields.io/badge/Tested_with-Pest-F28D1A?style=for-the-badge&logo=pestphp&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge">
 </p>
 
-<p align="center">
-  A centralized backoffice application for managing job vacancies, companies, applications, users, and platform operations.
-</p>
-
-<p align="center">
-  ![PHP](https://img.shields.io/badge/PHP-8.3%2B-777BB4?style=flat-square&logo=php&logoColor=white)
-  ![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat-square&logo=laravel&logoColor=white)
-  ![MariaDB](https://img.shields.io/badge/MariaDB-Database-003545?style=flat-square&logo=mariadb&logoColor=white)
-  ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-UI-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
-  ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
-</p>
+</div>
 
 ---
 
-## Overview
+## 📑 Table of Contents
 
-**JobBoard Backoffice** is the administrative management system of the JobBoard platform, built with Laravel.
+- [Overview](#-overview)
+- [Ecosystem](#-ecosystem)
+- [Features](#-features)
+- [Roles & Permissions](#-roles--permissions)
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+- [Demo Accounts](#-demo-accounts)
+- [Project Structure](#-project-structure)
+- [Routes Overview](#-routes-overview)
+- [Testing & Code Style](#-testing--code-style)
+- [Roadmap](#-roadmap)
+- [License](#-license)
 
-It provides a dedicated environment for administrators and company owners to manage their operations, maintain platform data, and oversee recruitment activities.
+---
 
-The application is designed to provide role-based access, organized management workflows, and a centralized interface for handling the core resources of the job board platform.
+## 🔎 Overview
 
-## Key Features
+**JobBoard Backoffice** is the internal-facing Laravel application of the JobBoard platform. It gives **administrators** full control over the platform and gives **company owners** a focused workspace for their own company, vacancies and incoming applications.
 
-### 1. Dashboard
-- Centralized dashboard for platform management.
-- Overview of important application data.
-- Dedicated management interface for authorized users.
+Applications submitted by job seekers in the public [JobBoard App](https://github.com/AbdoNasser23/Job-app) arrive here already **analysed by AI** (a relevance score from 0 to 100 plus written feedback), so recruiters can sort and review candidates faster.
 
-### 2. Job Vacancy Management
-- Create and manage job vacancies.
-- Update vacancy information.
-- Manage vacancy categories and job types.
-- Archive vacancies instead of permanently deleting them.
-- Track vacancy application statistics.
+Both applications share the same models and database schema through the [`job/shared`](https://github.com/AbdoNasser23/Job-shared) Composer package, which guarantees the two apps always agree on the data.
 
-### 3. Company Management
-- Manage registered companies.
-- Maintain company profiles and information.
-- Associate companies with their respective owners.
-- Control company access to their resources.
+## 🧩 Ecosystem
 
-### 4. Application Management
-- View job applications.
-- Review applicant information.
-- Access submitted CVs.
-- Review AI-generated scores and feedback.
-- Sort applications according to their evaluation scores.
-
-### 5. User Management
-- Manage platform users.
-- Control access based on user roles.
-- Separate administrative permissions from company-owner permissions.
-
-### 6. Authorization & Security
-- Laravel Gates and authorization policies.
-- Role-based access control.
-- Company owners can only manage resources associated with their companies.
-- Protected administrative operations.
-
-## Architecture
-
-JobBoard Backoffice is part of a larger ecosystem consisting of three interconnected components:
-
-```text
-                 JobBoard Platform
-                         |
-          +--------------+--------------+
-          |              |              |
-      JobBoard App   Job Backoffice  Job Shared
-          |              |              |
-          +--------------+--------------+
-                         |
-                  Shared Database
-                    Components
+```mermaid
+flowchart LR
+    JS["👤 Job Seekers"] --> APP["🌐 Job-app<br/>(public portal)"]
+    ADM["🛡️ Admins &<br/>Company Owners"] --> BO["🏢 Job-backoffice<br/>(this repo)"]
+    APP --> SH[["📦 Job-shared<br/>models · migrations · seeders"]]
+    BO --> SH
+    SH --> DB[("🗄️ Shared database")]
 ```
 
-### Related Repositories
-
-| Repository | Description |
+| Repository | Purpose |
 |---|---|
-| [JobBoard App](https://github.com/AbdoNasser23/Job-Board-platform) | Main job board application |
-| [Job Backoffice](https://github.com/AbdoNasser23/Job-backoffice) | Administrative and company management |
-| [Job Shared](https://github.com/AbdoNasser23/Job-shared) | Shared models and database components |
+| [**Job-app**](https://github.com/AbdoNasser23/Job-app) | Public portal where job seekers browse vacancies and apply with their CV |
+| [**Job-backoffice**](https://github.com/AbdoNasser23/Job-backoffice) | Admin & company-owner console *(you are here)* |
+| [**Job-shared**](https://github.com/AbdoNasser23/Job-shared) | Shared Eloquent models, migrations and seeders |
 
-The `Job Shared` package provides common models and database components used by both applications, helping maintain consistency and reduce duplicated code.
+## ✨ Features
 
-## Technology Stack
+### 📊 Analytics dashboard
+- **Active job seekers** – users with a login in the last 30 days (admin view).
+- **Total active vacancies** and **total applications** – platform-wide for admins, scoped to their own company for owners.
+- **Top 5 most-applied vacancies.**
+- **Top 5 conversion rates** – applications ÷ views per vacancy, fed by the unique-view tracking in Job-app.
 
-| Technology | Purpose |
+### 💼 Vacancy management
+- Full CRUD with validation (title, description, location, salary, category, company).
+- Employment types: `full_time`, `contract`, `remote`, `hybrid`.
+- Per-vacancy detail page with its applications.
+
+### 🏭 Company management
+- Create a company and either **attach an existing owner** or **create a new owner account** in the same step (wrapped in a database transaction, with an email-verification notification sent to new owners).
+- Industry classification, address and website.
+
+### 🗂️ Categories
+- Admin-managed job categories used to classify vacancies.
+
+### 📄 Application review
+- Browse applications with the candidate's **AI score** and **AI feedback**.
+- Move an application through `pending → approved / rejected`.
+- Access the submitted CV.
+
+### 👥 User management
+- Admin-only user list, edit and archive.
+- **Cascading archive:** archiving a company owner also archives their company and its vacancies; **restoring** the user restores exactly what was archived with them (tracked through the `archived_with_user` and `archived_with_company` flags).
+
+### 🗃️ Archive-first data handling
+- Every resource uses **soft deletes** with dedicated *Archived* pages, **restore** actions and explicit **permanent delete** where allowed.
+
+## 🔐 Roles & Permissions
+
+Access is enforced in two layers: a `role` middleware on the route group (only `admin` and `company_owner` can enter) and Laravel **Policies** on every resource. Job seekers are rejected at login.
+
+| Capability | Admin | Company Owner |
+|---|:---:|:---:|
+| View dashboard analytics | ✅ Platform-wide | ✅ Own company only |
+| Manage users | ✅ | ❌ |
+| Create companies | ✅ | ❌ |
+| View / edit / archive companies | ✅ All | ✅ Own only |
+| Manage categories | ✅ | ❌ (view only) |
+| Manage vacancies | ✅ All | ✅ Own company only |
+| View applications | ✅ All | ✅ Own vacancies only |
+| Update application status | ❌ | ✅ Own vacancies only |
+| Archive / restore / delete applications | ✅ | ✅ Own vacancies only |
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
 |---|---|
-| PHP 8.3+ | Backend development |
-| Laravel 13 | Application framework |
-| MySQL / MariaDB | Relational database |
-| Eloquent ORM | Database interactions |
-| Laravel Gates & Policies | Authorization |
-| Blade | Server-side templating |
-| Tailwind CSS | User interface styling |
-| JavaScript | Frontend interactions |
-| Composer | PHP dependency management |
-| Vite & NPM | Frontend asset management |
+| Language | PHP 8.3+ |
+| Framework | Laravel 13 |
+| Views | Blade, Alpine.js |
+| Styling | Tailwind CSS 3 + `@tailwindcss/forms` |
+| Build tooling | Vite 8 |
+| Authentication | Laravel Breeze |
+| Authorization | Gates, Policies, custom `RoleMiddleware` |
+| Testing | Pest 5 |
+| Code style | Laravel Pint |
+| Database | MySQL / MariaDB (recommended) or SQLite |
+| Shared code | [`job/shared`](https://github.com/AbdoNasser23/Job-shared) |
 
-## Requirements
+## 🚀 Getting Started
 
-Before running the project, make sure you have:
+### Prerequisites
 
-- PHP 8.3 or higher.
-- Composer.
-- Node.js and NPM.
-- MySQL or MariaDB.
-- Git.
+- PHP **8.3+** with the usual Laravel extensions
+- [Composer](https://getcomposer.org/) 2+
+- Node.js 20.19+ and npm
+- MySQL / MariaDB (or SQLite for a quick start)
+- Git
 
-## Installation & Setup
-
-### 1. Clone the repository
+### 1. Clone and install
 
 ```bash
 git clone https://github.com/AbdoNasser23/Job-backoffice.git
-```
-
-```bash
 cd Job-backoffice
-```
 
-### 2. Install PHP dependencies
-
-```bash
 composer install
+npm install
 ```
 
-### 3. Configure environment
+`job/shared` is pulled automatically from GitHub through the VCS repository declared in `composer.json`, so you do **not** need to clone it manually.
+
+### 2. Configure the environment
 
 ```bash
 cp .env.example .env
-```
-
-Generate the application key:
-
-```bash
 php artisan key:generate
 ```
 
-### 4. Configure the database
-
-Create a database and update the following values in your `.env` file:
+The default `.env.example` uses SQLite. For MySQL / MariaDB, update:
 
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=shaghal_db
+DB_DATABASE=jobboard
 DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-Update the credentials according to your local database configuration.
+> ⚠️ **Job-app and Job-backoffice must point to the same database.** If you use SQLite, set `DB_DATABASE` to the same absolute file path in both projects.
 
-### 5. Configure the shared package
+### 3. Migrate and seed
 
-The project uses the `job/shared` Composer package.
-
-The local development configuration expects the shared repository to be located alongside the backoffice directory:
-
-```text
-Job_board/
-│
-├── Job_backoffice/
-│
-└── Job_shared/
-```
-
-Make sure the shared package is available at the configured path before running Composer installation.
-
-Repository: https://github.com/AbdoNasser23/Job-shared
-
-### 6. Run database migrations
+The migrations ship with the shared package and are loaded automatically.
 
 ```bash
 php artisan migrate
+php artisan db:seed
 ```
 
-### 7. Install frontend dependencies
+> Run the migrations and the seeder **once** for the shared database, from either application.
+
+### 4. Run the app
 
 ```bash
-npm install
-```
-
-Build the frontend assets:
-
-```bash
-npm run build
-```
-
-### 8. Start the development server
-
-```bash
+npm run build        # or `npm run dev` for hot reloading
 php artisan serve
 ```
 
-Open the application at:
+Open **http://127.0.0.1:8000** and sign in with a [demo account](#-demo-accounts).
 
-http://127.0.0.1:8000
+> 💡 If you run Job-app at the same time, start one of them on another port: `php artisan serve --port=8001`.
 
-## Running Tests
+## 🔑 Demo Accounts
 
-Run the application test suite using:
+After seeding, the following accounts are available:
 
-```bash
-php artisan test
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@admin.com` | `123456789` |
+| Job Seeker *(Job-app only)* | `job@seeker.com` | `123456789` |
+
+The seeder also generates one **company owner** per seeded company with a random email (all with password `123456789`). Look them up in the **Users** page as an admin.
+
+> 🔒 These credentials are for local development only. Change or remove them before any deployment.
+
+## 🗺️ Project Structure
+
+```text
+Job-backoffice/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/        # Company, Vacancy, Application, Category, User, Dashboard + Auth
+│   │   ├── Middleware/         # RoleMiddleware (role:admin,company_owner)
+│   │   └── Requests/           # Form Requests with validation rules
+│   ├── Policies/               # Application, Category, Company, User, Vacancy
+│   ├── Services/
+│   │   └── AnalyticsService.php  # Dashboard metrics (role-scoped)
+│   └── View/Components/
+├── resources/
+│   ├── views/                  # Blade views per resource (index/create/edit/show/archived)
+│   ├── css/  js/
+├── routes/
+│   ├── web.php                 # Protected backoffice routes
+│   └── auth.php                # Authentication routes
+├── tests/                      # Pest feature & unit tests
+└── composer.json               # Requires job/shared
 ```
 
-## Project Goals
+> Models, migrations and seeders live in the **Job-shared** package, not in this repository.
 
-JobBoard Backoffice aims to provide:
+## 🧭 Routes Overview
 
-- Efficient recruitment platform management.
-- Secure separation of administrative responsibilities.
-- Organized company and vacancy management.
-- Centralized application evaluation.
-- Consistent data structures across multiple applications.
-- Maintainable and scalable backend architecture.
+Every resource follows the same pattern, shown here for vacancies:
 
-## Future Improvements
+| Method | URI | Action |
+|---|---|---|
+| `GET` | `/vacancies` | List |
+| `GET` / `POST` | `/vacancies/create` · `/vacancies` | Create |
+| `GET` | `/vacancies/{vacancy}` | Show |
+| `GET` / `PUT` | `/vacancies/{vacancy}/edit` · `/vacancies/{vacancy}` | Edit |
+| `DELETE` | `/vacancies/{vacancy}` | Archive (soft delete) |
+| `GET` | `/vacancies/archived` | Archived list |
+| `PATCH` | `/vacancies/{vacancy}/restore` | Restore |
+| `DELETE` | `/vacancies/{vacancy}/archived` | Permanent delete |
 
-Potential areas for future development include:
+The same structure applies to `applications`, `categories` and `companies`; `users` supports archive and restore only. The dashboard lives at `/`.
 
-- Advanced dashboard analytics.
-- More detailed recruitment reports.
-- Enhanced application filtering.
-- Expanded administrative monitoring tools.
-- Additional automation for recruitment workflows.
+## 🧪 Testing & Code Style
 
-## License
+```bash
+composer test            # clears config cache, then runs the Pest suite
+./vendor/bin/pint        # format the code with Laravel Pint
+```
 
-This project is licensed under the MIT License.
+## 🛣️ Roadmap
+
+- [ ] Export applications and analytics (CSV / PDF)
+- [ ] Advanced filtering and bulk actions on applications
+- [ ] Email notifications to candidates on status changes
+- [ ] Charts and time-range filters on the dashboard
+- [ ] Audit log for administrative actions
+
+## 📄 License
+
+Released under the [MIT License](https://opensource.org/licenses/MIT).
 
 ---
 
-<p align="center">
-  <strong>JobBoard Backoffice</strong>
-  <br/>
-  Manage. Monitor. Organize.
-  <br/>
-  <sub>Part of the JobBoard Platform ecosystem.</sub>
-</p>
+<div align="center">
+
+**JobBoard Backoffice** — Manage. Monitor. Organize.
+
+Built by [AbdoNasser23](https://github.com/AbdoNasser23)
+
+</div>
